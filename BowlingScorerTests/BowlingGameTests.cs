@@ -12,14 +12,14 @@ namespace BowlingScorer.Tests
         {
             // Arrange
             var game = new BowlingGame();
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 10; i++)
             {
                 game.AddFrame(new Frame { FirstRoll = 10 });
             }
-            game.AddBonusRolls(new List<Frame> 
-            { 
-                new Frame { FirstRoll = 10 }, 
-                new Frame { FirstRoll = 10 } 
+            game.AddBonusRolls(new List<Frame>
+            {
+                new Frame { FirstRoll = 10 },
+                new Frame { FirstRoll = 10 }
             });
 
             // Act
@@ -27,6 +27,80 @@ namespace BowlingScorer.Tests
 
             // Assert
             Assert.AreEqual(300, score);
+        }
+
+        [TestMethod]
+        public void CalculateScore_AllOneGame_ReturnsScore20()
+        {
+            // Arrange
+            var game = new BowlingGame();
+            for (int i = 0; i < 12; i++)
+            {
+                game.AddFrame(new Frame { FirstRoll = 1, SecondRoll = 1 });
+            }
+
+            // Act
+            int score = game.CalculateScore();
+
+            // Assert
+            Assert.AreEqual(20, score);
+        }
+
+        [TestMethod]
+        public void CalculateScore_SpareFollowedBy3_Returns16()
+        {
+            // Arrange
+            var game = new BowlingGame();
+
+            game.AddFrame(new Frame { FirstRoll = 5, SecondRoll = 5 }); // Spare
+            game.AddFrame(new Frame { FirstRoll = 3, SecondRoll = 0 }); // Followed by 3
+            for (int i = 0; i < 8; i++)
+            {
+                game.AddFrame(new Frame { FirstRoll = 0, SecondRoll = 0 });//Rest all gutter balls
+            }
+
+            // Act
+            int score = game.CalculateScore();
+
+            // Assert
+            Assert.AreEqual(16, score);
+        }
+
+        [TestMethod]
+        public void CalculateScore_StrikeFollowedBy3and4_Returns24()
+        {
+            // Arrange
+            var game = new BowlingGame();
+
+            game.AddFrame(new Frame { FirstRoll = 10 }); // Strike
+            game.AddFrame(new Frame { FirstRoll = 3, SecondRoll = 4 }); // Followed by 3 & 4
+            for (int i = 0; i < 8; i++)
+            {
+                game.AddFrame(new Frame { FirstRoll = 0, SecondRoll = 0 });//Rest all gutter balls
+            }
+
+            // Act
+            int score = game.CalculateScore();
+
+            // Assert
+            Assert.AreEqual(24, score);
+        }
+
+        [TestMethod]
+        public void CalculateScore_GutterGame_ReturnsZero()
+        {
+            // Arrange
+            var game = new BowlingGame();
+            for (int i = 0; i < 10; i++)
+            {
+                game.AddFrame(new Frame { FirstRoll = 0, SecondRoll = 0 });
+            }
+
+            // Act
+            int score = game.CalculateScore();
+
+            // Assert
+            Assert.AreEqual(0, score);
         }
 
         [TestMethod]
@@ -80,10 +154,10 @@ namespace BowlingScorer.Tests
             game.AddFrame(new Frame { FirstRoll = 10 }); // Strike
             game.AddFrame(new Frame { FirstRoll = 10 }); // Strike
             game.AddFrame(new Frame { FirstRoll = 10 }); // Strike
-            game.AddBonusRolls(new List<Frame> 
-            { 
-                new Frame { FirstRoll = 8 }, 
-                new Frame { FirstRoll = 1 } 
+            game.AddBonusRolls(new List<Frame>
+            {
+                new Frame { FirstRoll = 8 },
+                new Frame { FirstRoll = 1 }
             });
 
             // Act
@@ -91,23 +165,6 @@ namespace BowlingScorer.Tests
 
             // Assert
             Assert.AreEqual(167, score);
-        }
-
-        [TestMethod]
-        public void CalculateScore_GutterGame_ReturnsZero()
-        {
-            // Arrange
-            var game = new BowlingGame();
-            for (int i = 0; i < 10; i++)
-            {
-                game.AddFrame(new Frame { FirstRoll = 0, SecondRoll = 0 });
-            }
-
-            // Act
-            int score = game.CalculateScore();
-
-            // Assert
-            Assert.AreEqual(0, score);
         }
 
         [TestMethod]
@@ -140,7 +197,7 @@ namespace BowlingScorer.Tests
             }
             game.AddFrame(new Frame { FirstRoll = 10 }); // Strike in last frame
             game.AddBonusRolls(new List<Frame>
-            { 
+            {
                 new Frame { FirstRoll = 10 },
                 new Frame { FirstRoll = 10 }
             });
