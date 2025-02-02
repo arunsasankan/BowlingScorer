@@ -127,12 +127,14 @@ namespace BowlingScorer
             for (int i = 0; i < MaxFrames; i++)
             {
                 int maxPins = 10;
-                Console.WriteLine($"***** Frame {i + 1} *****");
+                Console.WriteLine($"---------- Frame {i + 1} ----------");
                 Console.Write("First roll: ");
                 int firstRoll = Convert.ToInt32(Console.ReadLine());
-                if(firstRoll < 0 || firstRoll > maxPins)
+                if (firstRoll < 0 || firstRoll > maxPins)
                 {
                     Console.WriteLine("Invalid input. Please enter a number between 0 and " + maxPins);
+                    Console.WriteLine($"-----------------------------");
+                    Console.WriteLine();
                     i--;
                     continue;
                 }
@@ -140,32 +142,36 @@ namespace BowlingScorer
                 {
                     Console.WriteLine("Strike!");
                     AddFrame(new Frame { FirstRoll = firstRoll, SecondRoll = 0 });
+                    Console.WriteLine($"-----------------------------");
                     Console.WriteLine();
                     continue;
                 }
                 Console.Write("Second roll: ");
                 int secondRoll = Convert.ToInt32(Console.ReadLine());
                 maxPins -= firstRoll;
-                if (secondRoll>=0 && secondRoll <= maxPins)
+                if (secondRoll >= 0 && secondRoll <= maxPins)
                 {
                     if (firstRoll + secondRoll == 10)
                     {
                         Console.WriteLine("Spare!");
-                        Console.WriteLine();
                     }
                     AddFrame(new Frame { FirstRoll = firstRoll, SecondRoll = secondRoll });
+                    Console.WriteLine($"-----------------------------");
+                    Console.WriteLine();
                 }
                 else
                 {
                     Console.WriteLine("Invalid input. Please enter a number between 0 and " + maxPins);
+                    Console.WriteLine($"-----------------------------");
+                    Console.WriteLine();
                     i--;
                     continue;
                 }
-               
+
             }
             if (frames[MaxFrames - 1].IsStrike)
             {
-                Console.WriteLine("***** Bonus Rolls *****");
+                Console.WriteLine($"-------- Bonus Rolls ---------");
                 Console.Write("First bonus roll: ");
                 int firstBonus = Convert.ToInt32(Console.ReadLine());
                 if (firstBonus == 10)
@@ -192,10 +198,12 @@ namespace BowlingScorer
                     }
                     AddBonusRolls(new List<Frame> { new Frame { FirstRoll = firstBonus }, new Frame { FirstRoll = secondBonus } });
                 }
+                Console.WriteLine($"-----------------------------");
+                Console.WriteLine();
             }
             else if (frames[MaxFrames - 1].IsSpare)
             {
-                Console.WriteLine("***** Bonus Roll *****");
+                Console.WriteLine($"-------- Bonus Roll ---------");
                 Console.Write("Bonus roll: ");
                 int bonus = Convert.ToInt32(Console.ReadLine());
                 if (bonus == 10)
@@ -204,6 +212,8 @@ namespace BowlingScorer
                     Console.WriteLine();
                 }
                 AddBonusRolls(new List<Frame> { new Frame { FirstRoll = bonus } });
+                Console.WriteLine($"-----------------------------");
+                Console.WriteLine();
             }
         }
     }
