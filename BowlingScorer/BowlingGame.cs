@@ -127,7 +127,7 @@ namespace BowlingScorer
                 int firstRoll = GetRollInput("First roll: ", 0, 10);
                 if (firstRoll == 10)
                 {
-                    Console.WriteLine("Strike!");
+                    Console.WriteLine("Strike! ( X )");
                     AddFrame(new Frame { FirstRoll = 10, SecondRoll = 0 });
                     Console.WriteLine($"-----------------------------\n");
                     continue;
@@ -136,7 +136,7 @@ namespace BowlingScorer
                 int secondRoll = GetRollInput("Second roll: ", 0, 10 - firstRoll);
                 if (firstRoll + secondRoll == 10)
                 {
-                    Console.WriteLine("Spare!");
+                    Console.WriteLine("Spare! ( / )");
                 }
                 AddFrame(new Frame { FirstRoll = firstRoll, SecondRoll = secondRoll });
                 Console.WriteLine($"-----------------------------\n");
@@ -174,13 +174,13 @@ namespace BowlingScorer
                 int firstBonus = GetRollInput("First bonus roll: ", 0, 10);
                 if (firstBonus == 10)
                 {
-                    Console.WriteLine("Strike!\n");
+                    Console.WriteLine("Strike! ( X )\n");
                 }
 
                 int secondBonus = GetRollInput("Second bonus roll: ", 0, 10);
                 if (secondBonus == 10)
                 {
-                    Console.WriteLine("Strike!\n");
+                    Console.WriteLine("Strike! ( X )\n");
                 }
                 AddBonusRolls(new List<Frame> { new Frame { FirstRoll = firstBonus }, new Frame { FirstRoll = secondBonus } });
                 Console.WriteLine($"-----------------------------\n");
@@ -191,7 +191,7 @@ namespace BowlingScorer
                 int bonusRoll = GetRollInput("Bonus roll: ", 0, 10);
                 if (bonusRoll == 10)
                 {
-                    Console.WriteLine("Strike!\n");
+                    Console.WriteLine("Strike! ( X )\n");
                 }
                 AddBonusRolls(new List<Frame> { new Frame { FirstRoll = bonusRoll } });
                 Console.WriteLine($"-----------------------------\n");
