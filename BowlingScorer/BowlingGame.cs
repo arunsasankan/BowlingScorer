@@ -25,7 +25,7 @@ namespace BowlingScorer
         /// Adds a frame to the bowling game.
         /// </summary>
         /// <param name="frame">The frame to add.</param>
-        private void AddFrame(Frame frame)
+        public void AddFrame(Frame frame)
         {
             if (frames.Count < MaxFrames)
             {
@@ -37,7 +37,7 @@ namespace BowlingScorer
         /// Adds bonus rolls to the final frame if applicable.
         /// </summary>
         /// <param name="bonuses">List of bonus frames.</param>
-        private void AddBonusRolls(List<Frame> bonuses)
+        public void AddBonusRolls(List<Frame> bonuses)
         {
             if (frames.Count == MaxFrames)
             {
@@ -118,103 +118,85 @@ namespace BowlingScorer
                 return frames[i + 1].FirstRoll;
             }
         }
-
-        /// <summary>
-        /// Reads the data for each frame from the console.
-        /// </summary>
         public void ReadData()
         {
             for (int i = 0; i < MaxFrames; i++)
             {
-                int maxPins = 10;
                 Console.WriteLine($"---------- Frame {i + 1} ----------");
-                Console.Write("First roll: ");
-                int firstRoll = Convert.ToInt32(Console.ReadLine());
-                if (firstRoll < 0 || firstRoll > maxPins)
-                {
-                    Console.WriteLine("Invalid input. Please enter a number between 0 and " + maxPins);
-                    Console.WriteLine($"-----------------------------");
-                    Console.WriteLine();
-                    i--;
-                    continue;
-                }
+
+                int firstRoll = GetRollInput("First roll: ", 0, 10);
                 if (firstRoll == 10)
                 {
                     Console.WriteLine("Strike!");
-                    AddFrame(new Frame { FirstRoll = firstRoll, SecondRoll = 0 });
-                    Console.WriteLine($"-----------------------------");
-                    Console.WriteLine();
-                    continue;
-                }
-                Console.Write("Second roll: ");
-                int secondRoll = Convert.ToInt32(Console.ReadLine());
-                maxPins -= firstRoll;
-                if (secondRoll >= 0 && secondRoll <= maxPins)
-                {
-                    if (firstRoll + secondRoll == 10)
-                    {
-                        Console.WriteLine("Spare!");
-                    }
-                    AddFrame(new Frame { FirstRoll = firstRoll, SecondRoll = secondRoll });
-                    Console.WriteLine($"-----------------------------");
-                    Console.WriteLine();
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter a number between 0 and " + maxPins);
-                    Console.WriteLine($"-----------------------------");
-                    Console.WriteLine();
-                    i--;
+                    AddFrame(new Frame { FirstRoll = 10, SecondRoll = 0 });
+                    Console.WriteLine($"-----------------------------\n");
                     continue;
                 }
 
+                int secondRoll = GetRollInput("Second roll: ", 0, 10 - firstRoll);
+                if (firstRoll + secondRoll == 10)
+                {
+                    Console.WriteLine("Spare!");
+                }
+                AddFrame(new Frame { FirstRoll = firstRoll, SecondRoll = secondRoll });
+                Console.WriteLine($"-----------------------------\n");
             }
-            if (frames[MaxFrames - 1].IsStrike)
+
+            HandleBonusRolls();
+        }
+
+        /// <summary>
+        /// Prompts the user for roll input and validates it.
+        /// </summary>
+        private int GetRollInput(string prompt, int min, int max)
+        {
+            int roll;
+            while (true)
             {
-                Console.WriteLine($"-------- Bonus Rolls ---------");
-                Console.Write("First bonus roll: ");
-                int firstBonus = Convert.ToInt32(Console.ReadLine());
-                if (firstBonus == 10)
+                Console.Write(prompt);
+                if (int.TryParse(Console.ReadLine(), out roll) && roll >= min && roll <= max)
                 {
-                    Console.WriteLine("Strike!");
-                    Console.WriteLine();
-                    Console.Write("Second bonus roll: ");
-                    int secondBonus = Convert.ToInt32(Console.ReadLine());
-                    if (secondBonus == 10)
-                    {
-                        Console.WriteLine("Strike!");
-                        Console.WriteLine();
-                    }
-                    AddBonusRolls(new List<Frame> { new Frame { FirstRoll = firstBonus }, new Frame { FirstRoll = secondBonus } });
+                    return roll;
                 }
-                else
-                {
-                    Console.Write("Second bonus roll: ");
-                    int secondBonus = Convert.ToInt32(Console.ReadLine());
-                    if (firstBonus + secondBonus == 10)
-                    {
-                        Console.WriteLine("Spare!");
-                        Console.WriteLine();
-                    }
-                    AddBonusRolls(new List<Frame> { new Frame { FirstRoll = firstBonus }, new Frame { FirstRoll = secondBonus } });
-                }
-                Console.WriteLine($"-----------------------------");
-                Console.WriteLine();
-            }
-            else if (frames[MaxFrames - 1].IsSpare)
-            {
-                Console.WriteLine($"-------- Bonus Roll ---------");
-                Console.Write("Bonus roll: ");
-                int bonus = Convert.ToInt32(Console.ReadLine());
-                if (bonus == 10)
-                {
-                    Console.WriteLine("Strike!");
-                    Console.WriteLine();
-                }
-                AddBonusRolls(new List<Frame> { new Frame { FirstRoll = bonus } });
-                Console.WriteLine($"-----------------------------");
-                Console.WriteLine();
+                Console.WriteLine($"Invalid input. Please enter a number between {min} and {max}.");
             }
         }
+
+        /// <summary>
+        /// Handles the bonus rolls for the 10th frame if necessary.
+        /// </summary>
+        private void HandleBonusRolls()
+        {
+            var lastFrame = frames[MaxFrames - 1];
+            if (lastFrame.IsStrike)
+            {
+                Console.WriteLine($"-------- Bonus Rolls ---------");
+                int firstBonus = GetRollInput("First bonus roll: ", 0, 10);
+                if (firstBonus == 10)
+                {
+                    Console.WriteLine("Strike!\n");
+                }
+
+                int secondBonus = GetRollInput("Second bonus roll: ", 0, 10);
+                if (secondBonus == 10)
+                {
+                    Console.WriteLine("Strike!\n");
+                }
+                AddBonusRolls(new List<Frame> { new Frame { FirstRoll = firstBonus }, new Frame { FirstRoll = secondBonus } });
+                Console.WriteLine($"-----------------------------\n");
+            }
+            else if (lastFrame.IsSpare)
+            {
+                Console.WriteLine($"-------- Bonus Roll ---------");
+                int bonusRoll = GetRollInput("Bonus roll: ", 0, 10);
+                if (bonusRoll == 10)
+                {
+                    Console.WriteLine("Strike!\n");
+                }
+                AddBonusRolls(new List<Frame> { new Frame { FirstRoll = bonusRoll } });
+                Console.WriteLine($"-----------------------------\n");
+            }
+        }
+
     }
 }
