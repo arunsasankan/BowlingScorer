@@ -3,4 +3,4 @@
 var game = new BowlingGame();
 
 game.ReadData();
-var score = game.CalculateScore();
+Console.WriteLine($"Total Score is {game.CalculateScore()}");
