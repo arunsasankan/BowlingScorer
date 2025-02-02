@@ -118,6 +118,12 @@ namespace BowlingScorer
                 return frames[i + 1].FirstRoll;
             }
         }
+        /// <summary>
+        /// Reads the data for each frame of the bowling game from the console input.
+        /// Prompts the user to enter the number of pins knocked down in each roll.
+        /// Handles strikes and spares appropriately.
+        /// Adds the frames to the game and handles bonus rolls for the 10th frame if necessary.
+        /// </summary>
         public void ReadData()
         {
             for (int i = 0; i < MaxFrames; i++)
