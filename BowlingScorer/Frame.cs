@@ -9,7 +9,7 @@ namespace BowlingScorer
     /// <summary>
     /// Represents a single frame in a bowling game.
     /// </summary>
-    internal class Frame
+    public class Frame
     {
         /// <summary>
         /// Gets or sets the number of pins knocked down in the first roll.
