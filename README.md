@@ -190,8 +190,6 @@ The project includes comprehensive unit tests covering all public methods in the
 -   **Author:** Arun Sasankan
     
 -   **GitHub:** arunsasankan
-    
--   **Email:** arunsasankan@example.com
 
 
 ## Future Enhancements
