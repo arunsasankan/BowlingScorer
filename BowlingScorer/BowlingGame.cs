@@ -30,10 +30,140 @@ namespace BowlingScorer
             if (frames.Count < MaxFrames)
             {
                 frames.Add(frame);
-            }
-            else if (frames.Count == MaxFrames && (frames[MaxFrames - 1].IsStrike || frames[MaxFrames - 1].IsSpare))
+            }           
+        }
+
+        public void AddBonusRolls(List<Frame> bonuses)
+        {
+            if (frames.Count == MaxFrames)
             {
-                frames[MaxFrames - 1].ThirdRoll = frame.FirstRoll;
+                if (bonuses.Count == 2)
+                {
+                    frames[MaxFrames - 1].SecondRoll = bonuses[0].FirstRoll;
+                    frames[MaxFrames - 1].ThirdRoll = bonuses[1].FirstRoll;
+                }
+                else if(bonuses.Count == 1)
+                {
+                    frames[MaxFrames - 1].ThirdRoll = bonuses[0].FirstRoll;
+                }
+            }
+        }
+
+        public int CalculateScore()
+        {
+            int score = 0;
+            for (int i = 0; i < frames.Count; i++)
+            {
+                if (frames[i].IsStrike)
+                {
+                    score += 10 + GetStrikeBonus(i);
+                }
+                else if (frames[i].IsSpare)
+                {
+                    score += 10 + GetSpareBonus(i);
+                }
+                else
+                {
+                    score += frames[i].FirstRoll + frames[i].SecondRoll;
+                }
+            }
+            return score;
+        }
+        public int GetStrikeBonus(int i)
+        {
+            if (i == MaxFrames - 1)
+            {
+                return frames[i].SecondRoll + frames[i].ThirdRoll;
+            }
+            else
+            {
+                if (frames[i + 1].IsStrike && i<MaxFrames-2)
+                {
+                    return 10 + frames[i + 2].FirstRoll;
+                }
+                else
+                {
+                    return frames[i + 1].FirstRoll + frames[i + 1].SecondRoll;
+                }
+            }
+        }
+
+        public int GetSpareBonus(int i)
+        {
+            if (i == MaxFrames - 1)
+            {
+                return frames[i].ThirdRoll;
+            }
+            else
+            {
+                return frames[i + 1].FirstRoll;
+            }
+        }
+
+        public void ReadData()
+        {
+            for (int i = 0; i < MaxFrames; i++)
+            {
+                Console.WriteLine($"***** Frame {i + 1} *****");
+                Console.Write("First roll: ");
+                int firstRoll = Convert.ToInt32(Console.ReadLine());
+                if (firstRoll == 10)
+                {
+                    Console.WriteLine("Strike!");
+                    AddFrame(new Frame { FirstRoll = firstRoll, SecondRoll = 0 });
+                    Console.WriteLine();
+                    continue;
+                }
+                Console.Write("Second roll: ");
+                int secondRoll = Convert.ToInt32(Console.ReadLine());
+                if (firstRoll + secondRoll == 10)
+                {
+                    Console.WriteLine("Spare!");
+                    Console.WriteLine();
+                }
+                AddFrame(new Frame { FirstRoll = firstRoll, SecondRoll = secondRoll });
+            }
+            if (frames[MaxFrames - 1].IsStrike)
+            {
+                Console.WriteLine("***** Bonus Rolls *****");
+                Console.Write("First bonus roll: ");
+                int firstBonus = Convert.ToInt32(Console.ReadLine());
+                if (firstBonus == 10)
+                {
+                    Console.WriteLine("Strike!");
+                    Console.WriteLine();
+                    Console.Write("Second bonus roll: ");
+                    int secondBonus = Convert.ToInt32(Console.ReadLine());
+                    if (secondBonus == 10)
+                    {
+                        Console.WriteLine("Strike!");
+                        Console.WriteLine();
+                    }
+                    AddBonusRolls(new List<Frame> { new Frame { FirstRoll = firstBonus }, new Frame { FirstRoll = secondBonus } });
+                }
+                else
+                {
+                    Console.Write("Second bonus roll: ");
+                    int secondBonus = Convert.ToInt32(Console.ReadLine());
+                    if (firstBonus + secondBonus == 10)
+                    {
+                        Console.WriteLine("Spare!");
+                        Console.WriteLine();
+                    }
+                    AddBonusRolls(new List<Frame> { new Frame { FirstRoll = firstBonus }, new Frame { FirstRoll = secondBonus } });
+                }
+            }
+            else if (frames[MaxFrames - 1].IsSpare)
+            {
+                Console.WriteLine("***** Bonus Roll *****");
+                Console.Write("Bonus roll: ");
+                int bonus = Convert.ToInt32(Console.ReadLine());
+                if (bonus == 10)
+                {
+                    Console.WriteLine("Strike!");
+                    Console.WriteLine();
+                }
+                AddBonusRolls(new List<Frame> { new Frame { FirstRoll = bonus } });
             }
         }
     }
