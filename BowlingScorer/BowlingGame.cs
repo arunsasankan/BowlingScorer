@@ -9,7 +9,7 @@ namespace BowlingScorer
     /// <summary>
     /// Represents a bowling game consisting of multiple frames.
     /// </summary>
-    internal class BowlingGame
+    public class BowlingGame
     {
         /// <summary>
         /// List of frames in the bowling game.
@@ -25,15 +25,19 @@ namespace BowlingScorer
         /// Adds a frame to the bowling game.
         /// </summary>
         /// <param name="frame">The frame to add.</param>
-        public void AddFrame(Frame frame)
+        private void AddFrame(Frame frame)
         {
             if (frames.Count < MaxFrames)
             {
                 frames.Add(frame);
-            }           
+            }
         }
 
-        public void AddBonusRolls(List<Frame> bonuses)
+        /// <summary>
+        /// Adds bonus rolls to the final frame if applicable.
+        /// </summary>
+        /// <param name="bonuses">List of bonus frames.</param>
+        private void AddBonusRolls(List<Frame> bonuses)
         {
             if (frames.Count == MaxFrames)
             {
@@ -42,13 +46,17 @@ namespace BowlingScorer
                     frames[MaxFrames - 1].SecondRoll = bonuses[0].FirstRoll;
                     frames[MaxFrames - 1].ThirdRoll = bonuses[1].FirstRoll;
                 }
-                else if(bonuses.Count == 1)
+                else if (bonuses.Count == 1)
                 {
                     frames[MaxFrames - 1].ThirdRoll = bonuses[0].FirstRoll;
                 }
             }
         }
 
+        /// <summary>
+        /// Calculates the total score of the bowling game.
+        /// </summary>
+        /// <returns>The total score.</returns>
         public int CalculateScore()
         {
             int score = 0;
@@ -69,7 +77,13 @@ namespace BowlingScorer
             }
             return score;
         }
-        public int GetStrikeBonus(int i)
+
+        /// <summary>
+        /// Gets the bonus score for a strike.
+        /// </summary>
+        /// <param name="i">The index of the frame.</param>
+        /// <returns>The bonus score for the strike.</returns>
+        private int GetStrikeBonus(int i)
         {
             if (i == MaxFrames - 1)
             {
@@ -77,7 +91,7 @@ namespace BowlingScorer
             }
             else
             {
-                if (frames[i + 1].IsStrike && i<MaxFrames-2)
+                if (frames[i + 1].IsStrike && i < MaxFrames - 2)
                 {
                     return 10 + frames[i + 2].FirstRoll;
                 }
@@ -88,7 +102,12 @@ namespace BowlingScorer
             }
         }
 
-        public int GetSpareBonus(int i)
+        /// <summary>
+        /// Gets the bonus score for a spare.
+        /// </summary>
+        /// <param name="i">The index of the frame.</param>
+        /// <returns>The bonus score for the spare.</returns>
+        private int GetSpareBonus(int i)
         {
             if (i == MaxFrames - 1)
             {
@@ -100,6 +119,9 @@ namespace BowlingScorer
             }
         }
 
+        /// <summary>
+        /// Reads the data for each frame from the console.
+        /// </summary>
         public void ReadData()
         {
             for (int i = 0; i < MaxFrames; i++)
