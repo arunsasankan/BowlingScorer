@@ -99,5 +99,28 @@ namespace BowlingScorer
                 return frames[i + 1].FirstRoll;
             }
         }
+
+        public void ReadData()
+        {
+            for (int i = 0; i < MaxFrames; i++)
+            {
+                Console.WriteLine($"Frame {i + 1}");
+                Console.Write("First roll: ");
+                int firstRoll = Convert.ToInt32(Console.ReadLine());
+                if(firstRoll == 10)
+                {
+                    Console.WriteLine("Strike!");
+                    AddFrame(new Frame { FirstRoll = firstRoll, SecondRoll = 0 });
+                    continue;
+                }
+                Console.Write("Second roll: ");
+                int secondRoll = Convert.ToInt32(Console.ReadLine());
+                if (firstRoll + secondRoll == 10)
+                {
+                    Console.WriteLine("Spare!");
+                }
+                AddFrame(new Frame { FirstRoll = firstRoll, SecondRoll = secondRoll });
+            }
+        }
     }
 }
