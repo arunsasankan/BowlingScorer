@@ -30,10 +30,73 @@ namespace BowlingScorer
             if (frames.Count < MaxFrames)
             {
                 frames.Add(frame);
-            }
-            else if (frames.Count == MaxFrames && (frames[MaxFrames - 1].IsStrike || frames[MaxFrames - 1].IsSpare))
+            }           
+        }
+
+        public void AddBonusRolls(List<Frame> bonuses)
+        {
+            if (frames.Count == MaxFrames)
             {
-                frames[MaxFrames - 1].ThirdRoll = frame.FirstRoll;
+                if (bonuses.Count == 2)
+                {
+                    frames[MaxFrames - 1].SecondRoll = frames[0].FirstRoll;
+                    frames[MaxFrames - 1].ThirdRoll = frames[1].FirstRoll;
+                }
+                else if(bonuses.Count == 1)
+                {
+                    frames[MaxFrames - 1].ThirdRoll = frames[0].FirstRoll;
+                }
+            }
+        }
+
+        public int CalculateScore()
+        {
+            int score = 0;
+            for (int i = 0; i < frames.Count; i++)
+            {
+                if (frames[i].IsStrike)
+                {
+                    score += 10 + GetStrikeBonus(i);
+                }
+                else if (frames[i].IsSpare)
+                {
+                    score += 10 + GetSpareBonus(i);
+                }
+                else
+                {
+                    score += frames[i].FirstRoll + frames[i].SecondRoll;
+                }
+            }
+            return score;
+        }
+        public int GetStrikeBonus(int i)
+        {
+            if (i == MaxFrames - 1)
+            {
+                return frames[i].SecondRoll + frames[i].ThirdRoll;
+            }
+            else
+            {
+                if (frames[i + 1].IsStrike && i<MaxFrames-2)
+                {
+                    return 10 + frames[i + 2].FirstRoll;
+                }
+                else
+                {
+                    return frames[i + 1].FirstRoll + frames[i + 1].SecondRoll;
+                }
+            }
+        }
+
+        public int GetSpareBonus(int i)
+        {
+            if (i == MaxFrames - 1)
+            {
+                return frames[i].ThirdRoll;
+            }
+            else
+            {
+                return frames[i + 1].FirstRoll;
             }
         }
     }
